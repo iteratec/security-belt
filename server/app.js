@@ -4,6 +4,9 @@ const path = require('path');
 const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+// keycloak authentication integration
+const Keycloak = require('keycloak-connect');
+const session = require('express-session');
 
 const index = require('./routes/index');
 const teams = require('./routes/teams');
@@ -34,8 +37,23 @@ function bindBase(app) {
 bindBase(app);
 bindStatic(app, config);
 
+// ---- keycloak integration ----
+// session
+app.use(session({
+  secret:'thisShouldBeLongAndSecret',
+  resave: false,
+  saveUninitialized: true,
+  store: memoryStore
+}));
+
+var memoryStore = new session.MemoryStore();
+var keycloak = new Keycloak({ store: memoryStore })
+
+app.use( keycloak.middleware() );
+// ---- keycloak integration  ----
+
 app.use(middleware.httpsRedirect);
-app.use('/', index.router);
+app.use('/', keycloak.protect(), index.router);
 app.use('/teams', teams.router);
 app.use('/skill', skill.router);
 app.use('/leaderboard', leaderboard.router);

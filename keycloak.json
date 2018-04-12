@@ -1,0 +1,8 @@
+{
+  "realm": "YOUR-REALM",
+  "auth-server-url": "https://localhost:8080/auth",
+  "ssl-required": "all",
+  "resource": "CLIENT-NAME",
+  "public-client": true,
+  "confidential-port": 0
+}
