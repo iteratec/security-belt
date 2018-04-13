@@ -14,6 +14,7 @@ function capitalize(s){
 function toggleSkill(team, skill) {
   return fetch('/skill/toggle', {
     method: 'post',
+    credentials: 'include',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
